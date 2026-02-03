@@ -3,7 +3,9 @@ const associate = require('./associate.js');
 
 const sync = async () => {
 	await associate();
-	await bdd.sync();
+	await bdd.sync({alter: true});
 }
 
 sync();
+
+// script : node ./helper/sync.js
