@@ -48,6 +48,10 @@ const initSocket = (server) => {
     };
     connectConversation();
     console.log('Client connecté :' + socket.id);
+
+    io.on('disconnect', () => {
+      console.log('User has diconnect');
+    });
   });
 };
 
