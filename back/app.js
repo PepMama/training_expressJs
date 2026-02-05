@@ -15,13 +15,14 @@ const startBdd = async () => {
 };
 startBdd();
 
-app.use(getLimiter());
 app.use(cors());
+
 app.use(express.json());
+app.use(getLimiter(1, 100));
 
 app.use('/user', userRouter);
 app.use('/message', messageRouter);
 app.use('/conversation', conversationRouter);
-app.use('/auth', authRouter);
+app.use('/auth', getLimiter(5, 5), authRouter);
 
 module.exports = app;

@@ -1,12 +1,11 @@
 const rateLimit = require('express-rate-limit');
 
-const getLimiter = () => {
+const getLimiter = (time, limit) => {
   const limiter = rateLimit({
-    windows: 15 * 60 * 100,
-    limit: 100,
-    standardHeader: 'draft-8',
+    windowMs: time * 60 * 1000,
+    limit: limit,
+    standardHeaders: 'draft-7',
     legacyHeaders: false,
-    ipv6Subnet: 56,
   });
   return limiter;
 };

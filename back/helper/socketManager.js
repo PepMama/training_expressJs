@@ -49,8 +49,13 @@ const initSocket = (server) => {
     connectConversation();
     console.log('Client connecté :' + socket.id);
 
-    io.on('disconnect', () => {
-      console.log('User has diconnect');
+    socket.on('join-conversation', (conversationId) => {
+      socket.join('conversation-' + conversationId);
+      console.log(`Socket ${socket.id} a rejoint la conversation ${conversationId}`);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('User has disconnect');
     });
   });
 };
