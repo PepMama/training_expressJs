@@ -2,6 +2,8 @@
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const RefreshToken = require('./refreshToken.model.js');
 require('dotenv').config();
 
 exports.login = async (req, res) => {
@@ -28,6 +30,24 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Wrong password' });
     }
     let token = jwt.sign({ userId: user.id }, process.env.JWT_KEY);
+
+    const refreshToken = crypto.randomBytes(32).toString('hex');
+    const hashToken = crypto.createHash('sha256').update(refreshToken).digest('hex');
+
+    await RefreshToken.create({
+      userId: user.id,
+      devideId: req.headers['X-DEVICE-ID'],
+      expiresAt: new Date(Date.now() + 7 * 60 * 60 * 100),
+      userAgent: req.get('user-agent'),
+      hash: hashToken,
+    });
+    res.cookie('refresh_token', hashToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     res.status(200).json({ token, username: user.username });
   } catch (error) {
     res.status(500).json({ error: error.message });
