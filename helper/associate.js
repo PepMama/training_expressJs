@@ -9,7 +9,10 @@ const associate = async () => {
   Conversation.hasMany(Message, { foreignKey: 'conversationId' }); // OneToMany
 
   User.belongsToMany(Conversation, { through: 'user_has_conversation' }); // ManyToMany
-  Conversation.belongsToMany(User, { through: 'user_has_conversation' });
+  Conversation.belongsToMany(User, { through: 'user_has_conversation', as: 'users' });
+  Conversation.belongsToMany(User, { through: 'user_has_conversation', as: 'filters' });
+
+  User.belongsToMany(User, { through: 'user_has_contact', as: 'contact' });
 };
 
 module.exports = associate;

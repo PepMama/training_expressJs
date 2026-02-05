@@ -4,7 +4,8 @@ const conversationController = require('./conversation.controller.js');
 const authMiddleware = require('../auth/auth.middleware.js');
 
 router.post('/', authMiddleware, conversationController.create);
-router.get('/', conversationController.getAll);
-router.get('/:id', conversationController.getById);
+router.get('/', authMiddleware, conversationController.getAll);
+router.get('/:id', authMiddleware, conversationController.getById);
+router.post('/addContactToConversation/:id', authMiddleware, conversationController.getById);
 
 module.exports = router;
