@@ -14,4 +14,11 @@ const initSocket = (server) => {
   });
 };
 
-module.exports = { io, initSocket };
+function getIo() {
+  if (!io) {
+    throw new Error('Socket io is not initialized');
+  }
+  return io;
+}
+
+module.exports = { getIo, initSocket };
