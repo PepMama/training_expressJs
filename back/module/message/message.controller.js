@@ -1,7 +1,7 @@
 const Conversation = require('../conversation/conversation.model.js');
 const Message = require('./message.model.js');
 const User = require('./../user/user.model.js');
-const { getIo } = require('./../../helper/socketManager.js');
+const { getIO } = require('./../../helper/socketManager.js');
 
 exports.getAll = async (req, res) => {
   let messageList = await Message.findAll();
@@ -49,8 +49,9 @@ exports.create = async (req, res) => {
     conversationId: req.body.conversationId,
     userId: req.token.userId,
   });
-  const io = getIo();
-  io.emit('message', message);
+
+  const io = getIO();
+  io.to('conversation-' + conversation.id).emit('message', message);
 
   res.status(201).json(message);
 };
